@@ -10,7 +10,20 @@ public class Order {
     private String status;
     private boolean complete;
 
+    public Order() {
+
+    }
+
     public Order(long petId, int quantity, Date shipDate, String status, boolean complete) {
+        this.petId = petId;
+        this.quantity = quantity;
+        this.shipDate = shipDate;
+        this.status = status;
+        this.complete = complete;
+    }
+
+    public Order(long id, long petId, int quantity, Date shipDate, String status, boolean complete) {
+        this.id = id;
         this.petId = petId;
         this.quantity = quantity;
         this.shipDate = shipDate;
