@@ -6,6 +6,7 @@ import models.Order;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.annotations.Title;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,8 @@ import java.util.Map;
 public class StoreTests {
     @Steps
     public StoreEndPoint storeEndPoint;
+
+    private static int DEFAULT_QTY = 11;
 
     private Order order = new Order(11, 1, new Date(), "available", true);
 
@@ -41,18 +44,19 @@ public class StoreTests {
     @Title("verification of get request")
     public void getOrder() {
         //Given
-        for (int i = 1; i < 11; i++) {
+        for (int i = 1; i < DEFAULT_QTY; i++) {
             Order order = new Order(i, i * 2, i, new Date(), "available", true);
             storeEndPoint.placeOrder(order);
         }
 
-        for (int i = 1; i < 11; i++) {
-            //When
-            Order orderFromService = storeEndPoint.getOrderById(String.valueOf(i)).as(Order.class);
+        for (int i = 1; i < DEFAULT_QTY; i++) {
+            //Given
+            Response response = storeEndPoint.getOrderById(String.valueOf(i));
             //Then
-            Assert.assertTrue(orderFromService.getStatus() != null && !orderFromService.getStatus().isEmpty());
-            Assert.assertTrue(orderFromService.getShipDate() != null);
-
+            response
+                    .then().body("status", Matchers.notNullValue())
+                    .and().body("petId", Matchers.notNullValue())
+                    .and().body("shipDate", Matchers.notNullValue());
         }
     }
 
